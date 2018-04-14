@@ -45,7 +45,7 @@ class App(tk.Tk):
         self.mainloop()
 
     def update_image(self):
-        image1 = faceRecog(self.filename)
+        self.img = faceRecog(self.filename)
 
         self.img = ImageTk.PhotoImage(Image.open("recognize.png"))
         self.label.configure(image=self.img)
@@ -59,9 +59,12 @@ class App(tk.Tk):
         #  and then save to file
         cv2.imwrite('image.png', frame)
 
+
         # When everything done, release the capture
         cap.release()
         cv2.destroyAllWindows()
+
+
 
     def wybierz(self):
         self.filename = fd.askopenfilename(filetypes=[("Obraz", "*.png")])  # wywołanie okna dialogowego open file
