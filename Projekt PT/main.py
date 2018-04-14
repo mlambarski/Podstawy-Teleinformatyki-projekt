@@ -1,7 +1,8 @@
-import cv2
+import cv22 as cv2
 import tkinter as tk
 from PIL import ImageTk, Image
 from tkinter import filedialog as fd
+
 
 def faceRecog(imagePath):
     cascPath = "haarcascade_frontalface_default.xml"
