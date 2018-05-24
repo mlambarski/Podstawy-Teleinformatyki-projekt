@@ -2,7 +2,7 @@ import socket
 
 class receive_message:
     def __init__(self):
-        TCP_IP = "192.168.0.101"
+        TCP_IP = "192.168..101"
         TCP_PORT = 50001
         self.BUFFER_SIZE = 1024
         self.sock = socket.socket(socket.AF_INET,  # Internet
