@@ -5,23 +5,34 @@ import sqlite3
 import os
 import socket
 
-
+from threading import Thread
+from time import sleep
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication, QDialog
 from PyQt5.QtGui import QPixmap, QImage 
 from PyQt5.uic import loadUi
 import cv2
 
+TCP_IP = '192.168.43.119'
+TCP_PORT = 5005
+BUFFER_SIZE = 1024
+        # MESSAGE = "Hello, World!"
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((TCP_IP, TCP_PORT))
 
+
+def connection(MESSAGE):
+    print("POlaczenie")   
+    s.send(MESSAGE)
+    
 class Life2Coding(QDialog):
     def __init__(self):
         super(Life2Coding,self).__init__()
         loadUi('lasttry.ui', self)      
-
-
         self.start_button.clicked.connect(self.start_webcam)
         self.stop_button.clicked.connect(self.stop_webcam)
-    
+
+
     def start_webcam(self):
         self.capture = cv2.VideoCapture(0)
         self.conn = sqlite3.connect('database.db')
@@ -60,11 +71,10 @@ class Life2Coding(QDialog):
                     self.c.execute("UPDATE users SET status='rozpoznany' WHERE id = (?);", (ids,))
                     result = self.c.fetchall()
                     print("Rozpoznano osobe ")
-                    
-                    """client = sending_message()
-                    client.connect()
-                    client.sendto(name)
-                    client.close()"""
+                    thread = Thread(target = connection, args = (name,))
+,3
+                    thread.start()
+
             else:
                 print("NO match")
                 cv2.putText(self.image, 'No Match', (x+2,y+h-5), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255),2)
