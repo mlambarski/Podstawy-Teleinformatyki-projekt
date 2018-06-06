@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>407</width>
+    <height>282</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Start camera</string>
+    <string>Rozpocznij rozpoznawanie</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -52,13 +52,10 @@
     </rect>
    </property>
    <property name="text">
-    <string>Stop camera</string>
+    <string>Zatrzymaj rozpoznawanie</string>
    </property>
   </widget>
-  <zorder>start_button</zorder>
-  <zorder>stop_button</zorder>
   <zorder>label</zorder>
-  <zorder>stop_button</zorder>
   <zorder>start_button</zorder>
   <zorder>stop_button</zorder>
  </widget>

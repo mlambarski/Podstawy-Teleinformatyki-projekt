@@ -1,18 +1,95 @@
-import sys
-import cv2
-import numpy as np 
-import sqlite3
-import os
-import socket
-
-from threading import Thread
-from time import sleep
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QApplication, QDialog
 from PyQt5.QtGui import QPixmap, QImage 
 from PyQt5.uic import loadUi
 import cv2
+import sys
+from PyQt5.QtCore import pyqtSlot
+import numpy as np 
+import sqlite3
+import os
+import socket
+from threading import Thread
+from time import sleep
+from PIL import Image
 
+class Admin(QDialog):
+    def __init__(self):
+        super(Admin,self).__init__()
+        loadUi('admin.ui', self)  
+    
+        self.pushButton_add.clicked.connect(self.addperson)
+        self.pushButton_teach.clicked.connect(self.teach)
+        self.pushButton_show.clicked.connect(self.recognize)
+
+    @pyqtSlot()
+    def addperson(self):
+        thread = Thread(target = add_person, args = ())
+        thread.start()       
+  
+    @pyqtSlot()
+    def teach(self):
+        thread = Thread(target = teach_people, args = ())
+        thread.start()       
+
+    @pyqtSlot()
+    def recognize(self):
+        window = Life2Coding()
+        window.show()
+        window.exec_()
+
+def teach_people():
+    recognizer = cv2.createLBPHFaceRecognizer()
+    path = 'dataset'
+    if not os.path.exists('./recognizer'):
+        os.makedirs('./recognizer')
+    def getImagesWithID(path):
+      imagePaths = [os.path.join(path,f) for f in os.listdir(path)]
+      faces = []
+      IDs = []
+      for imagePath in imagePaths:
+        faceImg = Image.open(imagePath).convert('L')
+        faceNp = np.array(faceImg,'uint8')
+        ID = int(os.path.split(imagePath)[-1].split('.')[1])
+        faces.append(faceNp)
+        IDs.append(ID)
+        cv2.imshow("training",faceNp)
+        cv2.waitKey(10)
+      return np.array(IDs), faces
+    Ids, faces = getImagesWithID(path)
+    recognizer.train(faces,Ids)
+    recognizer.save('recognizer/trainingData.yml')
+    cv2.destroyAllWindows()
+
+def add_person():
+    conn = sqlite3.connect('database.db')
+    if not os.path.exists('./dataset'):
+        os.makedirs('./dataset')
+    c = conn.cursor()
+    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    cap = cv2.VideoCapture(0)
+    uname = raw_input("Enter your name: ")
+    c.execute('INSERT INTO users (name) VALUES (?)', (uname, ))
+    uid = c.lastrowid
+    sampleNum = 0
+    while True:
+      ret, img = cap.read()
+      gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+      faces = face_cascade.detectMultiScale(gray, 1.3, 15)
+      print(faces)
+      for (x,y,w,h) in faces:
+        sampleNum = sampleNum+1
+        cv2.imwrite("dataset/User."+str(uid)+"."+str(sampleNum)+".jpg",gray[y:y+h,x:x+w])
+        cv2.rectangle(img, (x,y), (x+w, y+h), (255,0,0), 2)
+        cv2.waitKey(100)
+      cv2.imshow('img',img)
+      cv2.waitKey(1);
+      if sampleNum > 100:
+        break
+    cap.release()
+    conn.commit()
+    conn.close()
+    cv2.destroyAllWindows()
 
 """
 TCP_IP = '192.168.43.119'
@@ -26,7 +103,7 @@ s.connect((TCP_IP, TCP_PORT))
 def connection(MESSAGE):
     print("POlaczenie")   
     s.send(MESSAGE)
-    
+
 class Life2Coding(QDialog):
     def __init__(self):
         super(Life2Coding,self).__init__()
@@ -104,7 +181,7 @@ class Life2Coding(QDialog):
 
 if __name__ == '__main__':
     app=QApplication(sys.argv)
-    window = Life2Coding()
-    window.setWindowTitle('Rozpoznawanie twarzy')
+    window = Admin()
+    window.setWindowTitle('Panel administratora')
     window.show()
     sys.exit(app.exec_())

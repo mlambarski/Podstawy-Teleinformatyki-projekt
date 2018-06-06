@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>430</width>
+    <height>299</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>20</y>
+     <width>381</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Purisa</family>
+     <pointsize>24</pointsize>
+     <italic>false</italic>
+    </font>
+   </property>
+   <property name="text">
+    <string>Dodanie nowej osoby</string>
+   </property>
+  </widget>
+  <widget class="QPlainTextEdit" name="plainTextEdit_nrame">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>80</y>
+     <width>141</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_doPhotos">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>160</y>
+     <width>91</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Zrób zdjęcia</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_4">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>80</y>
+     <width>171</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Podaj imię i nazwisko osoby</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
