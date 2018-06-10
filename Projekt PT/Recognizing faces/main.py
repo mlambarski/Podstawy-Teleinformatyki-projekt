@@ -1,23 +1,39 @@
-import socket
+import sys
+from PyQt4 import QtCore, QtGui, uic
+import sqlite3
+from PyQt4.QtGui import * 
+from PyQt4.QtCore import *
 
-class receive_message:
+qtCreatorFile = "main.ui" # Enter file here.
+ 
+Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
+
+
+class MyApp(QtGui.QMainWindow, Ui_MainWindow):
+
     def __init__(self):
-        TCP_IP = "192.168..101"
-        TCP_PORT = 50001
-        self.BUFFER_SIZE = 1024
-        self.sock = socket.socket(socket.AF_INET,  # Internet
-                            socket.SOCK_STREAM)  # TTCP
-        self.sock.bind((TCP_IP, TCP_PORT))
-        self.sock.listen(1)
+        QtGui.QMainWindow.__init__(self)
+        Ui_MainWindow.__init__(self)
+        self.setupUi(self)
 
-        self.conn, self.addr = self.sock.accept()
+        c= sqlite3.connect("database.db")
+        result = c.execute("select * from users")
+        for data in result:
+            print("Osoba: ", data[1])
+            print("Status: ", data[2])
+                    # set data
+            self.tableWidget.setItem(0,0, QTableWidgetItem(data[1]))
+            if(data[2]) is None:
+                self.tableWidget.setItem(0,1, QTableWidgetItem(""))
+            else:
+                self.tableWidget.setItem(0,1, QTableWidgetItem(data[2]))
+          
+        
+ 
+if __name__ == "__main__":
+    app = QtGui.QApplication(sys.argv)
+    window = MyApp()
+    window.show()
+    sys.exit(app.exec_())
+    
 
-    def listening(self):
-        while True:
-            data = self.conn.recv(self.BUFFER_SIZE)  # buffer size is 1024 bytes
-            if not data: break
-            print("received message:", data)
-            self.conn.send(data)
-
-r = receive_message()
-r.listening()

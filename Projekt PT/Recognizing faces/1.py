@@ -5,7 +5,8 @@ sql = """
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
            id integer unique primary key autoincrement,
-           name text
+           name text, 
+           status text
 );
 """
 c.executescript(sql)
